@@ -14,6 +14,7 @@ import java.util.List;
 public class DefaultResponseManager implements ResponseManager {
     private final List<Responder> responders;
     private final DiscordClient client;
+    private final DataAccess dataAccess = new DataAccess();
 
     public DefaultResponseManager(DiscordClient client) {
         this.client = client;
@@ -27,7 +28,7 @@ public class DefaultResponseManager implements ResponseManager {
         }
 
         String text = message.getContent();
-        String prefix = DataAccess.getGuildPrefix(message.getGuildId().get());
+        String prefix = dataAccess.getGuildPrefix(message.getGuildId().get());
         VContent response;
 
         for (Responder responder : responders) {
