@@ -6,5 +6,7 @@ import versus.controller.content.VContent;
 public interface Responder {
     boolean requiresPrefix();
 
+    int defaultHexCode();
+
     VContent printReply(Message message, String text);
 }

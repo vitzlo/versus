@@ -13,6 +13,11 @@ public class TestResponder implements Responder {
     }
 
     @Override
+    public int defaultHexCode() {
+        return 0xFFFFFF;
+    }
+
+    @Override
     public VContent printReply(Message message, String text) {
         if (text.equals("ping")) {
             return new StringContent("pong");

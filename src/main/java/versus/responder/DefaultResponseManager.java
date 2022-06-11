@@ -7,6 +7,7 @@ import versus.controller.content.EmptyContent;
 import versus.controller.content.VContent;
 import versus.data.DataAccess;
 import versus.model.TestResponder;
+import versus.model.clash.ClashResponder;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class DefaultResponseManager implements ResponseManager {
 
     public DefaultResponseManager(DiscordClient client) {
         this.client = client;
-        this.responders = List.of(new TestResponder());
+        this.responders = List.of(new TestResponder(), new ClashResponder());
     }
 
     @Override
@@ -31,7 +32,7 @@ public class DefaultResponseManager implements ResponseManager {
 
         for (Responder responder : responders) {
             if (responder.requiresPrefix() && text.startsWith(prefix)) {
-                response = responder.printReply(message, text.substring(prefix.length()));
+                response = responder.printReply(message, prefix.length() == text.length() ? "" : text.substring(prefix.length()));
             } else if (!responder.requiresPrefix()) {
                 response = responder.printReply(message, text);
             } else {
