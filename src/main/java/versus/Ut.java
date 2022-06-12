@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Ut {
     public static final String DEFAULT_PREFIX = "vs ";
+    public static final String PFP_LINK = "https://cdn.discordapp.com/avatars/984971448080822313/01967ceb57e287e4e7e0b60c7131987f.webp?size=40";
 
     /**
      * Returns the specified command, without its prefix and without whitespace at the start and end.

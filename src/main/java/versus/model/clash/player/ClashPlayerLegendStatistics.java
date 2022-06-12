@@ -4,6 +4,6 @@ import versus.model.clash.ClashEntity;
 import versus.model.clash.league.ClashLegendLeagueSeasonResult;
 
 public class ClashPlayerLegendStatistics implements ClashEntity {
-    private ClashLegendLeagueSeasonResult currentSeason, bestSeason, previousSeason, previousVersusSeason, bestVersusSeason;
-    private int legendTrophies;
+    ClashLegendLeagueSeasonResult currentSeason, bestSeason, previousSeason, previousVersusSeason, bestVersusSeason;
+    int legendTrophies;
 }

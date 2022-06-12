@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileUt {
+    public static final String DB_ERROR_MSG = "Database could not be contacted. Please try again later.";
+
     public static String csvValueAtKeyCell(File csv, String keyColumn, String keyCell, String valueColumn)
             throws IOException, IllegalArgumentException {
         int keyIndex, valueIndex;

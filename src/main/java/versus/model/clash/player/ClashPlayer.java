@@ -7,19 +7,19 @@ import versus.model.clash.league.ClashLeague;
 import java.util.List;
 
 public class ClashPlayer implements ClashEntity {
-    private ClashPlayerClan clan;
-    private ClashLeague league;
-    private String role, warPreference;
-    private int attackWins, townHallWeaponLevel, versusBattleWins;
-    private ClashPlayerLegendStatistics legendStatistics;
-    private List<ClashPlayerItemLevel> troops;
-    private List<ClashPlayerItemLevel> heroes;
-    private List<ClashPlayerItemLevel> spells;
-    private int defenseWins, townHallLevel;
-    private List<ClashLabel> labels;
-    private String tag, name;
-    private int expLevel, trophies, bestTrophies, donations, donationsReceived, builderHallLevel,
+    public ClashPlayerClan clan;
+    public ClashLeague league;
+    public String role, warPreference;
+    public int attackWins, townHallWeaponLevel, versusBattleWins;
+    public ClashPlayerLegendStatistics legendStatistics;
+    public List<ClashPlayerItemLevel> troops;
+    public List<ClashPlayerItemLevel> heroes;
+    public List<ClashPlayerItemLevel> spells;
+    public int defenseWins, townHallLevel;
+    public List<ClashLabel> labels;
+    public String tag, name;
+    public int expLevel, trophies, bestTrophies, donations, donationsReceived, builderHallLevel,
             versusTrophies, bestVersusTrophies, warStars;
-    private List<ClashPlayerAchievementProgress> achievements;
-    private int versusBattleWinCount;
+    public List<ClashPlayerAchievementProgress> achievements;
+    public int versusBattleWinCount;
 }

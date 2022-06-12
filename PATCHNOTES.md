@@ -18,3 +18,10 @@
 * Add data access method to retrieve a pre-existing Clash of Clans player tag given a Discord user ID
   * Changed data representation to a CSV
   * Created FileUt and implemented a CSV parsing method
+
+[06/12/22] [v0.3.0] Load up
+* Make first API call and first JSON -> Class serialization
+  * Hide Clash of Clans developer token in offline CSV
+* Support basic Clash of Clash player info message 
+  * Make all classes relevant to info message public temporarily
+* Add error strings to utility classes
