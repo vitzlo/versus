@@ -1,13 +1,11 @@
 package versus.model.clash;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
+import okhttp3.*;
 import versus.ApiUt;
 import versus.FileUt;
 import versus.Ut;
@@ -54,9 +52,7 @@ public class ClashResponder extends HelpingResponder {
 
         String[] splits = text.split(" ");
         String userId = message.getUserData().id().asString();
-        String prefix = message.getGuildId().isPresent()
-                ? dataAccess.getGuildPrefixElseDefault(message.getGuildId().get().asString())
-                : Ut.DEFAULT_PREFIX; // TODO: to ut?
+        String prefix = Ut.getMessageGuildPrefix(message);
         if (text.isEmpty() || text.equals("help")) {
             return helpEmbed(prefix);
         } else if (text.matches("init #[0-Z]+ [0-z]+")) {
@@ -67,7 +63,23 @@ public class ClashResponder extends HelpingResponder {
     }
 
     private VContent initializeUser(String userId, String playerTag, String apiToken) {
-        return new EmptyContent(); // TODO: implement
+        try {
+            if (validatePlayer(playerTag, apiToken)) { // TODO: more accurate error messages for IO?
+                if (dataAccess.hasClashUserId(userId) && dataAccess.getClashPlayerTag(userId).equals(playerTag)) {
+                    return new StringContent("This player tag is already registered with this user. No changes have been made.");
+                } else if (dataAccess.hasClashUserId(userId)) {
+                    dataAccess.setClashPlayerTag(userId, playerTag);
+                    return new StringContent("Success! The previous player tag was overwritten.");
+                } else {
+                    dataAccess.setClashPlayerTag(userId, playerTag);
+                    return new StringContent("Success! The player tag was registered.");
+                }
+            } else {
+                return new StringContent("Token could not be validated. Try checking the parameters or refreshing the app.");
+            }
+        } catch (IOException io) {
+            return new StringContent(ApiUt.IO_ERROR_MSG);
+        }
     }
 
     private VContent retrieveStats(Message message, String userId, String text) {
@@ -134,16 +146,31 @@ public class ClashResponder extends HelpingResponder {
             Request request = new Request.Builder()
                     .url(String.format("https://api.clashofclans.com/v1/players/%s", ApiUt.encodeUrl(playerTag)))
                     .header("Authorization", "Bearer " + dataAccess.getClashToken())
-                    .build();
+                    .get().build();
 
             Response response = client.newCall(request).execute();
+            response.close();
 
             Gson gson = new Gson();
-            return gson.fromJson(response.body().string(), ClashPlayer.class);
-        } catch (IOException io) {
+            return gson.fromJson(response.body().string(), ClashPlayer.class); // TODO: ???
+        } catch (NullPointerException | IOException e) { // TODO: ???
             throw new IOException(ApiUt.IO_ERROR_MSG);
         } catch (RuntimeException rte) {
             throw new RuntimeException(ApiUt.BAD_JSON_MSG);
         }
+    }
+
+    private boolean validatePlayer(String playerTag, String apiToken) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(String.format("{\"token\": \"%s\"}", apiToken), MediaType.parse("json"));
+        Request request = new Request.Builder()
+                .url(String.format("https://api.clashofclans.com/v1/players/%s/verifytoken", ApiUt.encodeUrl(playerTag)))
+                .header("Authorization", "Bearer " + dataAccess.getClashToken())
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        response.close();
+        return response.code() == 200;
     }
 }

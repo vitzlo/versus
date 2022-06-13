@@ -33,3 +33,12 @@
   * Auto-generated getters for each field
 * Added support for `<prefix>` placeholders in string responses
 * More abstractions to utility classes
+
+# Version 1: CLASH OF CLANS!
+
+[06/13/22] [v1.0.0] CLASH!
+* Enable registration of Clash of Clans accounts via Discord
+  * Add file utility methods for checking for value presence and writing to CSVs
+  * Add data access methods for checking user IDs and setting player tags
+* Add library for easier file reading/writing and conversion into lists of strings
+* Close HTTP responses to prevent leakage

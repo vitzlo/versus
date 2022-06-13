@@ -4,7 +4,6 @@ import versus.model.clash.ClashEntity;
 
 import java.util.Map;
 
-// TODO: and all other clash classes, privacy?
 public class ClashLabel implements ClashEntity {
     private String name;
     private int id;

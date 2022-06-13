@@ -5,6 +5,6 @@ public class ApiUt {
     public static final String BAD_JSON_MSG = "Received a JSON which could not be parsed. Please try again later.";
 
     public static String encodeUrl(String url) {
-        return url.replace("#", "%23");
+        return url.replaceAll("#", "%23");
     }
 }
