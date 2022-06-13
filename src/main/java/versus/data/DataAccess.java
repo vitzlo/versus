@@ -1,6 +1,5 @@
 package versus.data;
 
-import discord4j.common.util.Snowflake;
 import versus.FileUt;
 import versus.Ut;
 
@@ -10,12 +9,20 @@ import java.io.IOException;
 public class DataAccess {
     private final File _tokensCsv = new File("src/main/java/versus/data/_tokens.csv");
     private final File clashPlayerTagCsv = new File("src/main/java/versus/data/clashtags.csv");
+    private final File prefixesCsv = new File("src/main/java/versus/data/prefixes.csv");
 
-    public String getGuildPrefix(Snowflake guildId) {
-        return Ut.DEFAULT_PREFIX; // TODO: implement
+    public String getGuildPrefix(String guildId) throws IOException, IllegalArgumentException {
+        return FileUt.csvValueAtKeyCell(prefixesCsv, "GUILD_ID", guildId, "PREFIX");
     }
 
-    // TODO: make enum for different domains? maybe not bc multiple tokens
+    public String getGuildPrefixElseDefault(String guildId) {
+        try {
+            return getGuildPrefix(guildId);
+        } catch (IOException | IllegalArgumentException e) {
+            return Ut.DEFAULT_PREFIX;
+        }
+    }
+
     public String getClashToken() throws IOException, IllegalArgumentException {
         return FileUt.csvValueAtKeyCell(_tokensCsv, "NAME", "clash", "TOKEN");
     }

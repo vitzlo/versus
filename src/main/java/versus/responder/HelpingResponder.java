@@ -16,13 +16,14 @@ public abstract class HelpingResponder implements Responder {
         this.helpTitle = helpTitle;
     }
 
-    protected VContent helpEmbed() {
+    protected VContent helpEmbed(String prefix) {
         EmbedCreateSpec.Builder builder = EmbedCreateSpec.builder()
                 .color(Color.of(defaultHexCode()))
                 .title(helpTitle);
 
         for (Map.Entry<String, String> message : helpMessages.entrySet()) {
-            builder.addField("`" + message.getKey() + "`", message.getValue(), false);
+            builder.addField(String.format("`%s%s`", prefix, message.getKey()),
+                    "↳ " + message.getValue(), false);
         }
 
         return new EmbedContent(builder.build());

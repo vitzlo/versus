@@ -20,8 +20,16 @@
   * Created FileUt and implemented a CSV parsing method
 
 [06/12/22] [v0.3.0] Load up
-* Make first API call and first JSON -> Class serialization
+* Make first API call and first JSON to Class serialization
   * Hide Clash of Clans developer token in offline CSV
 * Support basic Clash of Clash player info message 
   * Make all classes relevant to info message public temporarily
 * Add error strings to utility classes
+
+[06/12/22] [v0.3.1] Clean up
+* Reformat player info message for neatness
+  * Added utility method to neatly format key/value pairs in fields
+* Made Clash of Clans class fields private again
+  * Auto-generated getters for each field
+* Added support for `<prefix>` placeholders in string responses
+* More abstractions to utility classes

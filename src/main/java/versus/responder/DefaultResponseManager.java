@@ -1,6 +1,5 @@
 package versus.responder;
 
-import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
 import discord4j.core.object.entity.Message;
 import versus.controller.content.EmptyContent;
@@ -28,7 +27,7 @@ public class DefaultResponseManager implements ResponseManager {
         }
 
         String text = message.getContent();
-        String prefix = dataAccess.getGuildPrefix(message.getGuildId().get());
+        String prefix = dataAccess.getGuildPrefixElseDefault(message.getGuildId().get().asString());
         VContent response;
 
         for (Responder responder : responders) {

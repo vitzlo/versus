@@ -20,14 +20,13 @@ public class FileUt {
             List<String> headers = Arrays.stream(line.split(",")).toList();
             if (!headers.contains(keyColumn)) {
                 throw new IllegalArgumentException("Key column not found in the headers");
-            } else {
-                keyIndex = headers.indexOf(keyColumn);
             }
+            keyIndex = headers.indexOf(keyColumn);
+
             if (!headers.contains(valueColumn)) {
                 throw new IllegalArgumentException("Value column not found in the headers");
-            } else {
-                valueIndex = headers.indexOf(valueColumn);
             }
+            valueIndex = headers.indexOf(valueColumn);
 
             String[] splits;
             line = reader.readLine();

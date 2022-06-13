@@ -29,7 +29,9 @@ public class ClashResponder extends HelpingResponder {
     private final DataAccess dataAccess = new DataAccess();
 
     public ClashResponder() {
-        super(Map.of("clash/coc init <#tag> <apiKey>", "↳ Register your Discord account with the bot via the player tag and the API key found in the game settings"), "Clash of Clans Help");
+        super(Map.of("clash/coc init <#tag> <apiKey>", "Register your Discord account with the bot via the player tag and the API key found in the game settings",
+                        "clash/coc player", "Get general information about your account"),
+                "Clash of Clans Help");
     }
 
     @Override
@@ -52,8 +54,11 @@ public class ClashResponder extends HelpingResponder {
 
         String[] splits = text.split(" ");
         String userId = message.getUserData().id().asString();
+        String prefix = message.getGuildId().isPresent()
+                ? dataAccess.getGuildPrefixElseDefault(message.getGuildId().get().asString())
+                : Ut.DEFAULT_PREFIX; // TODO: to ut?
         if (text.isEmpty() || text.equals("help")) {
-            return helpEmbed();
+            return helpEmbed(prefix);
         } else if (text.matches("init #[0-Z]+ [0-z]+")) {
             return initializeUser(userId, splits[1], splits[2]);
         } else {
@@ -85,25 +90,27 @@ public class ClashResponder extends HelpingResponder {
     private VContent playerGeneralInfo(ClashPlayer player, User user) {
         EmbedCreateSpec builder = EmbedCreateSpec.builder()
                 .color(Color.of(defaultHexCode()))
-                .title(String.format("%s (Level %s)", player.name, player.expLevel))
+                .title(String.format("%s (Level %s)", player.getName(), player.getExpLevel()))
                 .author(user.getUsername(), "https://github.com/vitzlo/versus", user.getAvatarUrl()) // TODO: ut for more specific builder?
-                .description("Player tag: " + player.tag)
-                .thumbnail(player.league.iconUrls.get("medium"))
+                .description("Player tag: " + player.getTag())
+                .thumbnail(player.getLeague().getIconUrls().get("medium"))
 
-                .addField("Town Hall Level", "" + player.townHallLevel, true)
-                .addField("Town Hall Weapon Level", "" + player.townHallWeaponLevel, true)
-                .addField("\u200B", "\u200B", false)
-                .addField("Trophies", "" + player.trophies, true)
-                .addField("Best Trophies", "" + player.bestTrophies, true)
-                .addField("\u200B", "\u200B", false)
-                .addField("Attack Wins", "" + player.attackWins, true)
-                .addField("Defense Wins", "" + player.defenseWins, true)
-                .addField("\u200B", "\u200B", false)
-                .addField("Clan Name", player.clan.name, true)
-                .addField("Clan Tag", player.clan.tag, true)
-                .addField("\u200B", "\u200B", false)
-                .addField("Donations Received", "" + player.donationsReceived, true)
-                .addField("Donations Given", "" + player.donations, true)
+                .addField("__Village Info__", Ut.fieldValuePairs(
+                        "Town Hall Level", player.getTownHallLevel(),
+                        "Town Hall Weapon Level", player.getTownHallWeaponLevel()
+                ), false)
+                .addField("__Multiplayer Info__", Ut.fieldValuePairs(
+                        "Trophies", player.getTrophies(),
+                        "Best Trophies", player.getBestTrophies(),
+                        "Attack Wins", player.getAttackWins(),
+                        "Defense Wins", player.getDefenseWins()
+                ), false)
+                .addField("__Clan Info__", Ut.fieldValuePairs(
+                        "Clan Name", player.getClan().getName(),
+                        "Clan Tag", player.getClan().getTag(),
+                        "Donations Received", player.getDonationsReceived(),
+                        "Donations Given", player.getDonations()
+                ), false)
                 .timestamp(Instant.now())
                 .footer("versus", Ut.PFP_LINK)
                 .build();
@@ -117,9 +124,9 @@ public class ClashResponder extends HelpingResponder {
         try {
             playerTag = dataAccess.getClashPlayerTag(userId);
         } catch (IOException io) {
-            throw new IOException(FileUt.DB_ERROR_MSG); // TODO: server prefix via data access
+            throw new IOException(FileUt.DB_ERROR_MSG);
         } catch (IllegalArgumentException iae) {
-            throw new IllegalArgumentException("User not found in the database. Use `<prefix>clash help` to learn about registering."); // TODO: server prefix via data access
+            throw new IllegalArgumentException(String.format("User not found in the database. Use `%sclash help` to learn about registering.", Ut.PLACEHOLDER_PREFIX));
         }
 
         try {
